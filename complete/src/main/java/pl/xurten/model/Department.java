@@ -1,4 +1,4 @@
-package pl.xurten;
+package pl.xurten.model;
 
 public class Department
 {
