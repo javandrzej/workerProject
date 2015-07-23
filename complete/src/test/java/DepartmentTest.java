@@ -35,6 +35,7 @@ public class DepartmentTest
     @Test
     public void testDepartment() throws Exception
     {
+
         mongoDepartmentRepository.save(new Department(10,"Programmer"));
         mongoDepartmentRepository.save(new Department(12,"Designer"));
         mongoDepartmentRepository.findAll().forEach(System.out::println);
