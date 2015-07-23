@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.xurten.model.Worker;
 import pl.xurten.repository.mongo.MongoWorkerRepository;
+import pl.xurten.service.MovingWorkerService;
+import pl.xurten.service.PrintWorkersServiceImpl;
 
 import java.util.List;
 
@@ -15,6 +17,22 @@ public class WorkerController
 {
     @Autowired
     MongoWorkerRepository mongoWorkerRepository;
+
+    @Autowired
+    MovingWorkerService movingWorkerService;
+
+    @Autowired
+    PrintWorkersServiceImpl printWorkersService;
+
+    public WorkerController()
+    {
+
+    }
+
+    public WorkerController(MovingWorkerService movingWorkerService)
+    {
+        this.movingWorkerService = movingWorkerService;
+    }
 
     @RequestMapping(value = "/workers",method = RequestMethod.GET)
     String getWorkers()
@@ -28,8 +46,14 @@ public class WorkerController
         return "We have "+String.valueOf(mongoWorkerRepository.findAll().size()) +" entries. <br/>" +"\n"+stringBuilder.toString();
     }
 
+    @RequestMapping(value = "/workers/department",method = RequestMethod.GET)
+    String getWorkersWithDepartment()
+    {
+        return printWorkersService.printAllWorkersInDepartments();
+    }
+
     @RequestMapping(value = "/addworker",method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
-    @ResponseBody Worker addWorkers(@RequestBody Worker inputWorker){
+    @ResponseBody Worker addWorker(@RequestBody Worker inputWorker){
         Worker workerResult = mongoWorkerRepository.save(new Worker(inputWorker.getId(), inputWorker.getName(), inputWorker.getLastname(), inputWorker.getDepartmentId()));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(ServletUriComponentsBuilder
@@ -72,12 +96,6 @@ public class WorkerController
         worker.setName(name);
         mongoWorkerRepository.save(worker);
         return "Updated worker with id = "+id;
-    }
-
-    @RequestMapping("/worker")
-    String getWorker()
-    {
-        return "String worker ..";
     }
 
     @RequestMapping("/")
