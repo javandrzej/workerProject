@@ -5,8 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.xurten.repository.WorkerRepository;
 import pl.xurten.model.Worker;
+import pl.xurten.repository.mongo.MongoWorkerRepository;
 
 import java.util.List;
 
@@ -14,23 +14,23 @@ import java.util.List;
 public class WorkerController
 {
     @Autowired
-    WorkerRepository workerRepository;
+    MongoWorkerRepository mongoWorkerRepository;
 
     @RequestMapping(value = "/workers",method = RequestMethod.GET)
     String getWorkers()
     {
         StringBuilder stringBuilder = new StringBuilder();
-        for(Worker worker : workerRepository.findAll())
+        for(Worker worker : mongoWorkerRepository.findAll())
         {
             stringBuilder.append(worker+"<br/>");
         }
         System.out.println(stringBuilder);
-        return "We have "+String.valueOf(workerRepository.findAll().size()) +" entries. <br/>" +"\n"+stringBuilder.toString();
+        return "We have "+String.valueOf(mongoWorkerRepository.findAll().size()) +" entries. <br/>" +"\n"+stringBuilder.toString();
     }
 
     @RequestMapping(value = "/addworker",method = RequestMethod.POST,consumes = "application/json",produces = "application/json")
     @ResponseBody Worker addWorkers(@RequestBody Worker inputWorker){
-        Worker workerResult = workerRepository.save(new Worker(inputWorker.getId(), inputWorker.getName(), inputWorker.getLastname(), inputWorker.getDepartmentId()));
+        Worker workerResult = mongoWorkerRepository.save(new Worker(inputWorker.getId(), inputWorker.getName(), inputWorker.getLastname(), inputWorker.getDepartmentId()));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/addworker")
@@ -42,7 +42,7 @@ public class WorkerController
     String deleteWorkerWithId(@RequestParam("id") String id)
     {
         System.out.println("PARAMETER = "+id);
-        final List<Worker> all = workerRepository.findAll();
+        final List<Worker> all = mongoWorkerRepository.findAll();
         Worker worker = new Worker();
         for(Worker element:all)
             if (element.getId() == Integer.valueOf(id))
@@ -54,14 +54,14 @@ public class WorkerController
         {
             throw new IllegalArgumentException("Worker can not be null");
         }
-        workerRepository.delete(worker);
+        mongoWorkerRepository.delete(worker);
         return "Deleted worker with id = "+id;
     }
 
     @RequestMapping(value = "/updateworker",method = RequestMethod.GET)
     String updateWorker(@RequestParam("id") String id,@RequestParam("name") String name)
     {
-        final List<Worker> all = workerRepository.findAll();
+        final List<Worker> all = mongoWorkerRepository.findAll();
         Worker worker = new Worker();
         for(Worker element:all)
             if (element.getId() == Integer.valueOf(id))
@@ -70,7 +70,7 @@ public class WorkerController
                 break;
             }
         worker.setName(name);
-        workerRepository.save(worker);
+        mongoWorkerRepository.save(worker);
         return "Updated worker with id = "+id;
     }
 

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import pl.xurten.Application;
 import pl.xurten.model.Worker;
-import pl.xurten.repository.WorkerRepository;
+import pl.xurten.repository.mongo.MongoWorkerRepository;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,7 +37,7 @@ public class WorkerControllerTest
     private List<Worker> workerList = new ArrayList<>();
 
     @Autowired
-    private WorkerRepository workerRepository;
+    private MongoWorkerRepository mongoWorkerRepository;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -46,8 +46,8 @@ public class WorkerControllerTest
     public void setup() throws Exception {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
-        workerRepository.save(new Worker(4211, "Andrzej", "Zakrzewski", 1));
-        workerRepository.save(new Worker(7811,"Darek","Delman",2));
+        mongoWorkerRepository.save(new Worker(4211, "Andrzej", "Zakrzewski", 1));
+        mongoWorkerRepository.save(new Worker(7811,"Darek","Delman",2));
         workerList.add(new Worker(4211, "Andrzej", "Zakrzewski", 1));
         workerList.add(new Worker(7811,"Darek","Delman",2));
     }

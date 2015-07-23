@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import pl.xurten.Application;
 import pl.xurten.model.Department;
-import pl.xurten.repository.DepartmentRepository;
+import pl.xurten.repository.mongo.MongoDepartmentRepository;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -25,7 +25,7 @@ public class DepartmentTest
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private MongoDepartmentRepository mongoDepartmentRepository;
 
     @Before
     public void setup() throws Exception {
@@ -35,9 +35,9 @@ public class DepartmentTest
     @Test
     public void testDepartment() throws Exception
     {
-        departmentRepository.save(new Department(10,"Programmer"));
-        departmentRepository.save(new Department(12,"Designer"));
-        departmentRepository.findAll().forEach(System.out::println);
-        assertEquals(4, departmentRepository.findAll().size());
+        mongoDepartmentRepository.save(new Department(10,"Programmer"));
+        mongoDepartmentRepository.save(new Department(12,"Designer"));
+        mongoDepartmentRepository.findAll().forEach(System.out::println);
+        assertEquals(4, mongoDepartmentRepository.findAll().size());
     }
 }
