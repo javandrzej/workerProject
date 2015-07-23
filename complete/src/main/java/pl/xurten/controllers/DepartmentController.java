@@ -6,21 +6,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import pl.xurten.model.Department;
 import pl.xurten.repository.mongo.MongoDepartmentRepository;
+
 @RestController
-public class DepartmentController
-{
+public class DepartmentController {
+
     @Autowired
     MongoDepartmentRepository mongoDepartmentRepository;
 
-    @RequestMapping(value = "/departments",method = RequestMethod.GET)
-    String getWorkers()
-    {
+    @RequestMapping(value = "/departments", method = RequestMethod.GET)
+    String getWorkers() {
         StringBuilder stringBuilder = new StringBuilder();
-        for(Department department : mongoDepartmentRepository.findAll())
-        {
-            stringBuilder.append(department+"<br/>");
+
+        for (Department department : mongoDepartmentRepository.findAll()) {
+            stringBuilder.append(department).append("<br/>");
         }
-        System.out.println(stringBuilder);
-        return "We have "+String.valueOf(mongoDepartmentRepository.findAll().size()) +" entries. <br/>" +"\n"+stringBuilder.toString();
+
+        return "We have " + String.valueOf(mongoDepartmentRepository.findAll().size()) + " entries. <br/>" + "\n" + stringBuilder.toString();
     }
 }
